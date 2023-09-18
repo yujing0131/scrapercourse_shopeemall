@@ -1,9 +1,8 @@
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
 import time
-service = Service(executable_path = "chromedriver")
+
 ##利用驅動程式管理員在執行排重拾自動下載驅動程式
 driver=  webdriver.Chrome()
 
