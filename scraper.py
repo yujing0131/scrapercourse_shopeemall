@@ -16,6 +16,7 @@ ActionChains(driver).move_by_offset(100,100).click().perform()
 cards = driver.find_elements(By.CSS_SELECTOR,"div[class='Qnex0a']")
 #將彈跳視窗關閉
 for card in cards:
+    ActionChains(driver).move_to_element(card).perform()
     title = card.find_element(By.CSS_SELECTOR,"div[class='WF8zKZ XNhH9V vy4NFA']").text #商品名稱
     price = card.find_element(By.CSS_SELECTOR,"div[class='CCRieW _7BzXXp']").text#商品價格
     link = card.find_element(By.TAG_NAME,"a").get_attribute('href')##求出<a>內的gref屬性質
