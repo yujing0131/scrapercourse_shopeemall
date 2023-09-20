@@ -3,6 +3,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 import time
 from selenium.webdriver.common.action_chains import ActionChains
+
 ##利用驅動程式管理員在執行排重拾自動下載驅動程式
 driver=  webdriver.Chrome()
 
