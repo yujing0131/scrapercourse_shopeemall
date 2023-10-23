@@ -7,11 +7,12 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+import pandas as pd
 ##利用驅動程式管理員在執行排重拾自動下載驅動程式
-driver= webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+driver= webdriver.Chrome()#service=Service(ChromeDriverManager().install())
 #爬取多分業的資料在發送請求前指定頁碼範圍
-for page in range(1,3):
+result = []   #若要將每一個分業下的資料打包起來，就必須將迴圈放置在最外層
+for page in range(1,2):
     
     driver.get(f'https://shopee.tw/mall/%E5%B1%85%E5%AE%B6%E7%94%9F%E6%B4%BB-cat.11040925/popular?pageNumber={page}')#代表format string
 
@@ -32,24 +33,25 @@ for page in range(1,3):
     #將彈跳視窗關閉
     for card in cards:
         # ActionChains(driver).move_to_element(card).perform()
-        title = card.find_element(By.CSS_SELECTOR,"div[class='WF8zKZ _8ayTha _3I+cDt']").text #商品名稱
-        price = card.find_element(By.CSS_SELECTOR,"div[class='CCRieW ZJwBnM']").text#商品價格
+        title = card.find_element(By.CSS_SELECTOR,"div[class='RSS81Z']").text #商品名稱
+        price = card.find_element(By.CSS_SELECTOR,"div[class='+do1+c _9K8U2m']").text#商品價格
         link = card.find_element(By.TAG_NAME,"a").get_attribute('href')##求出<a>內的gref屬性質
         items.append((title,price,link))
+    
+    # for item in items:
 
-    # print(items)
-    result = []
-    for item in items:
-
-        driver.get(item[2])
+    #     driver.get(item[2])
         
-        for i in range(5):##設定滾動滑鼠的次數
-            driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
-            #因為在滾動過程有可能移動到沒有商品評價的地方，若使用明確等待也找不到指定的元素𢰍發生中斷錯誤，因此維持使用time.sleep強制頂戴
-            time.sleep(3)
-        comments = driver.find_elements(By.CSS_SELECTOR,"div[class='Rk6V+3']")
-        for comment in comments:
-            result.append((item[0],item[1],comment.text))
-        break
-    print(f"第{page}頁")
-    print(result)
+    #     for i in range(5):##設定滾動滑鼠的次數
+    #         driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
+    #         #因為在滾動過程有可能移動到沒有商品評價的地方，若使用明確等待也找不到指定的元素𢰍發生中斷錯誤，因此維持使用time.sleep強制頂戴
+    #         time.sleep(3)
+    #     comments = driver.find_elements(By.CSS_SELECTOR,"div[class='Rk6V+3']")
+    #     for comment in comments:
+    #         result.append((item[0],item[1],comment.text))
+    #     break
+    # print(f"第{page}頁")
+    # print(result)
+
+data = pd.DataFrame(items,columns=['title','price','comments'])
+print(data)
