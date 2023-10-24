@@ -147,6 +147,7 @@ dmypy.json
 .pyre/
 dcard.py
 shopeemall.csv
+shopeemall.xlsx
 # pytype static type analyzer
 .pytype/
 
