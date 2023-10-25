@@ -149,6 +149,7 @@ dcard.py
 Google_trend,py
 shopeemall.csv
 shopeemall.xlsx
+shopeemall-bigquery-key.json
 # pytype static type analyzer
 .pytype/
 
