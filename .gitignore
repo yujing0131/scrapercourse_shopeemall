@@ -146,6 +146,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 dcard.py
+Google_trend,py
 shopeemall.csv
 shopeemall.xlsx
 # pytype static type analyzer

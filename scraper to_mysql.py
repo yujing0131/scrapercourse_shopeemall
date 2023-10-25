@@ -9,6 +9,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd
 import re
+import pymysql
+from sqlalchemy import create_engine ##建立資料庫連線
 ##利用驅動程式管理員在執行排重拾自動下載驅動程式
 driver= webdriver.Chrome()#service=Service(ChromeDriverManager().install())
 #爬取多分業的資料在發送請求前指定頁碼範圍
@@ -54,7 +56,7 @@ for page in range(1,2):
     # print(f"第{page}頁")
     # print(result)
 
-data = pd.DataFrame(items,columns=['title','price','comments'])
+data = pd.DataFrame(items,columns=['title','price','link'])
 # 單一字元資料清理
 data['title'] = data['title'].str.replace('【','')
 data['title'] = data['title'].str.replace('】','')
@@ -89,5 +91,9 @@ emoji_pattern = re.compile("(["
 
 "])"
 )
-data['comments'] = data['comments'].str.replace(emoji_pattern,'',regex=True)#商品評價裡面若有符合emoji_pattern規則就會去除
-print(data)
+data['link'] = data['link'].str.replace(emoji_pattern,'',regex=True)#商品評價裡面若有符合emoji_pattern規則就會去除
+# print(data)
+#指定用pymysql連結
+engine = create_engine('mysql+pymysql://root:830131@localhost:3306/shopeemall?charset=utf8mb4')
+#將data傳入資料庫名稱
+data.to_sql('product',engine.connect(),if_exists='append',index=False)
