@@ -11,11 +11,17 @@ import pandas as pd
 import re
 from google.cloud import bigquery
 import os
-##利用驅動程式管理員在執行排重拾自動下載驅動程式
-driver= webdriver.Chrome()#service=Service(ChromeDriverManager().install())
+##利用驅動程式管理員在執行自動下載驅動程式
+opt =Options()
+opt.add_argument('--headless') # 啟動無頭模式，也就是不打開瀏覽器的圖形化介面
+opt.add_argument('--no-sandbox') # 以最高權限執行瀏覽器
+opt.add_argument('--disable-gpu') # 關閉GPU，避免某些系統或網頁發生錯誤
+opt.add_argument('--disable-dev-shm-usage') # 關閉/dev/shm暫存區，避免磁區太小，導致瀏覽器執行失敗
+
+driver= webdriver.Chrome(options=opt)#service=Service(ChromeDriverManager().install()),
 #爬取多分業的資料在發送請求前指定頁碼範圍
 result = []   #若要將每一個分業下的資料打包起來，就必須將迴圈放置在最外層
-for page in range(1,2):
+for page in range(1,5):
     
     driver.get(f'https://shopee.tw/mall/%E5%B1%85%E5%AE%B6%E7%94%9F%E6%B4%BB-cat.11040925/popular?pageNumber={page}')#代表format string
 
@@ -24,7 +30,7 @@ for page in range(1,2):
     ##將滑鼠移動到座標為(x,y)=(100,100)的位置上點擊左鍵關閉
     ActionChains(driver).move_by_offset(100,100).click().perform()
     #移動滑鼠至底部顯示所有列表商品
-    driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
+    driver.execute_script("window.scrollBy(0,1000)")
     #先定位要等待的商品元素
     locator = (By.CSS_SELECTOR,"div[class='Qnex0a']")
     WebDriverWait(driver,10).until(
@@ -46,7 +52,8 @@ for page in range(1,2):
     #     driver.get(item[2])
         
     #     for i in range(5):##設定滾動滑鼠的次數
-    #         driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
+    #         ##避免google雲端平台執行時滾動幅度太大導致無法載入商品，設定每次滾動幅度只有1000個像素
+    #         driver.execute_script("window.scrollBy(0,1000)")
     #         #因為在滾動過程有可能移動到沒有商品評價的地方，若使用明確等待也找不到指定的元素𢰍發生中斷錯誤，因此維持使用time.sleep強制頂戴
     #         time.sleep(3)
     #     comments = driver.find_elements(By.CSS_SELECTOR,"div[class='Rk6V+3']")

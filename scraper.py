@@ -13,7 +13,7 @@ import re
 driver= webdriver.Chrome()#service=Service(ChromeDriverManager().install())
 #爬取多分業的資料在發送請求前指定頁碼範圍
 result = []   #若要將每一個分業下的資料打包起來，就必須將迴圈放置在最外層
-for page in range(1,2):
+for page in range(1,5):
     
     driver.get(f'https://shopee.tw/mall/%E5%B1%85%E5%AE%B6%E7%94%9F%E6%B4%BB-cat.11040925/popular?pageNumber={page}')#代表format string
 
@@ -37,7 +37,7 @@ for page in range(1,2):
         title = card.find_element(By.CSS_SELECTOR,"div[class='RSS81Z']").text #商品名稱
         price = card.find_element(By.CSS_SELECTOR,"div[class='+do1+c _9K8U2m']").text#商品價格
         link = card.find_element(By.TAG_NAME,"a").get_attribute('href')##求出<a>內的gref屬性質
-        items.append((title,price,link))
+        result.append((title,price,link))
     
     # for item in items:
 
@@ -54,7 +54,7 @@ for page in range(1,2):
     # print(f"第{page}頁")
     # print(result)
 
-data = pd.DataFrame(items,columns=['title','price','comments'])
+data = pd.DataFrame(result,columns=['title','price','link'])
 # 單一字元資料清理
 data['title'] = data['title'].str.replace('【','')
 data['title'] = data['title'].str.replace('】','')
@@ -89,5 +89,5 @@ emoji_pattern = re.compile("(["
 
 "])"
 )
-data['comments'] = data['comments'].str.replace(emoji_pattern,'',regex=True)#商品評價裡面若有符合emoji_pattern規則就會去除
+data['link'] = data['link'].str.replace(emoji_pattern,'',regex=True)#商品評價裡面若有符合emoji_pattern規則就會去除
 print(data)
